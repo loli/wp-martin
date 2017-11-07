@@ -3,11 +3,11 @@
   Plugin Name: Attachment avoider for 'contact form 7'
   Description: Using 'contanct form 7' and 'save contact form 7', this plugin replaces all e-mail attachements with a hyperlink. This behaviour is triggered by placing the [attachments-to-links] tag in the e-mail body. Note: Because of a bug in 'save contact form 7' only the first attachement associated with each form can be converted to a valid link.
   Author: Oskar Maier
-  Version: 0.2
+  Version: 0.3
 */
 
 // WARNING: save-contact-form-7 apparently contains a bug in the current version (2.0), where a second upload file
-//          is never copied to the permanent storage location. This script anyway creates a link for it, depite
+//          is never copied to the permanent storage location. This script anyway creates a link for it, despite
 //          the file not existing.
 
 
@@ -73,5 +73,5 @@ if (!function_exists("wpaacf7_attachment_to_link")) {
   }
 }
   
-add_filter( 'wpcf7_mail_components', wpaacf7_attachment_to_link);
+add_filter( 'wpcf7_mail_components', wpaacf7_attachment_to_link, 10, 3); # hook-name / filter-function / priority / n-arguments
 ?>
