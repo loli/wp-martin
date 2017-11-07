@@ -1,0 +1,65 @@
+##########
+# Task I #
+##########
+Upon submitting the contact form, all fields reset to their default value automatically. How to achieve that selected fields maintain their value after submission?
+
+Solution
+########
+
+Look for file:
+  [wordpress]/wp-content/plugins/contact-form-7/includes/js/scripts.js
+
+Replace:
+  if ( 'mail_sent' == data.status ) {
+	  $form.each( function() {
+		  this.reset();
+	  } );
+  }
+			
+With:
+  if ( 'mail_sent' == data.status ) {
+	  $form.each( function() {
+	    var $elements = this.elements;
+	    for (var index = 0; index < $elements.length; ++index) {
+	      if (!$elements[index].classList.contains('permanent-entry')) {
+	        $elements[index].value = $elements[index].defaultValue;
+	      }
+	    }
+	  } );
+  }
+
+
+
+Then, to make a field value permanent after submission, simply add the class 'permanent-entry' to it. E.g.:
+
+  [text* your-name class:permanent-entry]
+
+This will work with all types of fields.
+
+Workload
+########
+Preparing: 0:30h
+Setting up the environement, wordpress and the plugins: 0:45h
+Finding a passable solution: 1h
+Testing: 0:15h
+  
+  
+
+###########
+# Task II #
+###########
+Upon submitting, an email is send to a) the company and b) the customer. The uploaded file is attached to both by default. The company would prefer that at least for their e-mail the attachment is replaced by a link to the file.
+
+Solution
+########
+Wrote a small plugin (attachment-avoider-contact-form-7.php) that registers a filter into 'wpcf7_mail_components'.
+
+Description
+-----------
+Using 'contanct form 7' and 'save contact form 7', this plugin replaces all e-mail attachements with a hyperlink. This behaviour is triggered by adding an [attachments-to-links] tag to the e-mail body. Note: Because of a bug in 'save contact form 7', only one attachement can be converted to a valid link.
+
+Workload
+########
+Preparing & setting-up: None (shared with above task).
+Finding a passable solution: 1h
+Implementing and testing: 1:30h
