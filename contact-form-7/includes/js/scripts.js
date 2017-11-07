@@ -277,7 +277,12 @@
 
 			if ( 'mail_sent' == data.status ) {
 				$form.each( function() {
-					this.reset();
+	        var $elements = this.elements;
+	        for (var index = 0; index < $elements.length; ++index) {
+	          if (!$elements[index].classList.contains('permanent-entry')) {
+	            $elements[index].value = $elements[index].defaultValue;
+	          }
+	        }
 				} );
 			}
 
