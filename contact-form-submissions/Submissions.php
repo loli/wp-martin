@@ -123,6 +123,9 @@ class WPCF7Submissions
         if (empty($wpcf7s_post_id)) {
             $wpcf7s_post_id = $post_id;
         }
+        
+        // CHANGES
+        $components = $this->wpcf7s_attachment_to_link($components, $post_id);
 
         return $components;
     }
@@ -214,4 +217,43 @@ class WPCF7Submissions
 
         return $wpcf7s_url;
     }
+    
+    public function wpcf7s_attachment_to_link ($components, $post_id) {
+  
+      // configuration
+      $WPAACF7_TRG_TAG = '[attachments-to-links]';
+      $WPAACF7_MSG_NO_ATTACHEMENTS = 'No attachements submitted.';
+      
+      // check for target tag existance
+      if ( false == strpos($components['body'], $WPAACF7_TRG_TAG) ) {
+        return $components;
+      }
+      
+      // check for attachements
+      if ( 0 == count($components['attachments']) ) {
+        $components['body'] = str_replace($WPAACF7_TRG_TAG, $WPAACF7_MSG_NO_ATTACHEMENTS, $components['body']);
+        return $components;
+      }
+      
+      // convert into link
+      $wpcf7s_dir = $this->get_wpcf7s_url();
+      $wpcf7s_dir .= '/' . $post_id;
+      
+      // convert into links
+      global $wpdb;
+      $replace = array();
+      foreach ( $components['attachments'] as $link_to_attachement ) {
+        $replace[] = $wpcf7s_dir . '/' . basename($link_to_attachement);
+      }
+      $replace = implode("\r\n", $replace);
+      
+      // replace tag
+      $components['body'] = str_replace($WPAACF7_TRG_TAG, $replace, $components['body']);
+      
+      // remove attachements
+      $components['attachments'] = array();
+      
+      return $components;
+    }
 }
+  
