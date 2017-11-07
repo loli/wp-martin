@@ -36,6 +36,38 @@ To make a field value permanent after submission, simply add the class 'permanen
 This will work with all types of fields.
 
 
+## contribution 2
+
+### task
+Upon submitting, an email is send to a) the company and b) the customer. The uploaded file is attached to both by default. The company would prefer that at least for their e-mail the attachment is replaced by a link to the file.
+
+### solution
+Wrote a small plugin (attachment-avoider-contact-form-7.php) that registers a filter into *wpcf7_mail_components*.
+
+Uses:
+- *wpcf7_mail_components* hook: http://hookr.io/filters/wpcf7_mail_components/
+- *add_filter* from wordpress: https://developer.wordpress.org/reference/functions/add_filter/
+
+### usage
+Using *contanct form 7* and *save contact form 7*, this plugin replaces all e-mail attachements with a hyperlink. This behaviour is triggered by adding an `[attachments-to-links]` tag to the e-mail body. Note: Because of a bug in *save contact form 7*, only one attachement can be converted to a valid link.
+
+### examples
+**Message Body** field
+```
+From: [your-name] <[your-email]>
+Subject: [your-subject]
+
+Message Body:
+[your-message]
+
+Attachments:
+[attachments-to-links]
+```
+You are still required to add the name of your upload to the **File Attachments** field, e.g.,
+```
+[your-file]
+```
+
 ## local server configuration
 **location** : http://localhost/wp-martin/
 
