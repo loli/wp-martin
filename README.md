@@ -1,6 +1,41 @@
 # wp-martin
 Martin's famous WP form changes
 
+
+## contribution 1
+### task
+Upon submitting the contact form, all fields reset to their default value automatically. How to achieve that selected fields maintain their value after submission?
+
+### solution
+Look for file `[wordpress]/wp-content/plugins/contact-form-7/includes/js/scripts.js` and replace
+```js
+  if ( 'mail_sent' == data.status ) {
+	  $form.each( function() {
+		  this.reset();
+	  } );
+  }
+```
+with
+```js
+  if ( 'mail_sent' == data.status ) {
+	  $form.each( function() {
+	    var $elements = this.elements;
+	    for (var index = 0; index < $elements.length; ++index) {
+	      if (!$elements[index].classList.contains('permanent-entry')) {
+	        $elements[index].value = $elements[index].defaultValue;
+	      }
+	    }
+	  } );
+  }
+```
+## usage
+To make a field value permanent after submission, simply add the class 'permanent-entry' to it. E.g.:
+```
+  [text* your-name class:permanent-entry]
+```
+This will work with all types of fields.
+
+
 ## local server configuration
 **location** : http://localhost/wp-martin/
 
