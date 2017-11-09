@@ -4,9 +4,9 @@
   Plugin name: Save Contact Form 7
   Plugin URI: http://nimblechapps.com
   Description: A simple plugin to save contact form data to db.
-  Author: Nimblechapps
+  Author: Nimblechapps, Oskar Maier <oskar.maier@gmail.com>
   Author URI: http://nimblechapps.com
-  Version: 2.0
+  Version: 2.1
  */
 //function to check dependencies for Contact Form 7 Plugin
 
@@ -462,7 +462,7 @@ if (is_admin()) {
                     }
                 }
             }
-
+            
             echo json_encode($data);
             wp_die();
         }
