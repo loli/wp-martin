@@ -882,66 +882,40 @@ if (!function_exists("nimble_save_cf7_data")) {
         } else {
             $query_status = $wpdb->query($sql_insert);
         }
-
+        
         if ($query_status == TRUE) {
-            //insert image into plugin upload directory into wp-content/uploads... directory
-            $id = $wpdb->insert_id;    // last inserted row id from databasr table
-            $fieldname = key($submited['uploaded_files']); // form input file field name 
-            if ($fieldname != "") {
-                if ($plugin_data['contact-form-7/wp-contact-form-7.php']['Version'] == "3.1" || $plugin_data['contact-form-7/wp-contact-form-7.php']['Version'] == "3.1.1") {
-                    $uploaded_file_info = pathinfo(implode("/", $fname)); //uploaded file info like basename,extension etc     
-                } else {
-                    $uploaded_file_info = pathinfo($submited['posted_data'][$fieldname]); //uploaded file info like basename,extension etc
-                }
-                if (!file_exists($nimble_dir_pah['basedir'] . "/nimble_uploads")) {
-
-                   
-
-                    mkdir($nimble_dir_pah['basedir'] . "/nimble_uploads", 0777);
-                    chmod($nimble_dir_pah['basedir'] . "/nimble_uploads", 0777);
-
-                    $filepath = array_values($submited['uploaded_files']);  // source location of the file
-                    if (!isset($filepath)) {
-                        
-                        if (!file_exists($nimble_dir_pah['basedir'] . "/nimble_uploads/$id")) {
-                            mkdir($nimble_dir_pah['basedir'] . "/nimble_uploads/$id", 0777);
-                            chmod($nimble_dir_pah['basedir'] . "/nimble_uploads/$id", 0777);
-                            echo $nimble_dir_pah['basedir'] . "/nimble_uploads/$id";
-                            $newfile = $nimble_dir_pah['basedir'] . "/nimble_uploads/$id/" . $uploaded_file_info['basename']; // destination location of the file
-                            copy($filepath[0], $newfile);
-                        } else {
-                         
-                            $newfile = $nimble_dir_pah['basedir'] . "/nimble_uploads/$id/" . $uploaded_file_info['basename']; // destination location of the file
-                            copy($filepath[0], $newfile);
-                        }
-                    }else{
-                        if (!file_exists($nimble_dir_pah['basedir'] . "/nimble_uploads/$id")) {
-                            mkdir($nimble_dir_pah['basedir'] . "/nimble_uploads/$id", 0777);
-                            chmod($nimble_dir_pah['basedir'] . "/nimble_uploads/$id", 0777);
-                            
-                            $newfile = $nimble_dir_pah['basedir'] . "/nimble_uploads/$id/" . $uploaded_file_info['basename']; // destination location of the file
-                            copy($filepath[0], $newfile);
-                        }
+            // move uploaded files into wp-content/uploads/nimble_uploads/<id>
+            $id = $wpdb->insert_id;    // last inserted row id from database table
+            
+            foreach ($submited['uploaded_files'] as $fieldname => $filepath) {
+              
+                if ($fieldname != "") {
+                
+                    // get uploaded file info, like basename, extension, etc.  
+                    if ($plugin_data['contact-form-7/wp-contact-form-7.php']['Version'] == "3.1" || $plugin_data['contact-form-7/wp-contact-form-7.php']['Version'] == "3.1.1") {
+                        $uploaded_file_info = pathinfo(implode("/", $fieldname)); 
+                    } else {
+                        $uploaded_file_info = pathinfo($submited['posted_data'][$fieldname]); //uploaded file info like basename,extension etc
                     }
-                } else {
-
-                    $filepath = array_values($submited['uploaded_files']); // source location of the file
-                    if (isset($filepath)) {
-                        if (!file_exists($nimble_dir_pah['basedir'] . "/nimble_uploads/$id")) {
-                            mkdir($nimble_dir_pah['basedir'] . "/nimble_uploads/$id", 0777);
-
-
-
-                            chmod($nimble_dir_pah['basedir'] . "/nimble_uploads/$id", 0777);
-
-                            $newfile = $nimble_dir_pah['basedir'] . "/nimble_uploads/$id/" . $uploaded_file_info['basename']; // destination location of the file
-                            copy($filepath[0], $newfile);
-                        } else {
-                            $newfile = $nimble_dir_pah['basedir'] . "/nimble_uploads/$id/" . $uploaded_file_info['basename']; // destination location of the file
-                            copy($filepath[0], $newfile);
-                        }
+                    
+                    // create upload dir if missing
+                    if (!file_exists($nimble_dir_pah['basedir'] . "/nimble_uploads")) {
+                        mkdir($nimble_dir_pah['basedir'] . "/nimble_uploads", 0777);
+                        chmod($nimble_dir_pah['basedir'] . "/nimble_uploads", 0777);
                     }
+                    
+                    // create entry dir if missing
+                    if (!file_exists($nimble_dir_pah['basedir'] . "/nimble_uploads/$id")) {
+                        mkdir($nimble_dir_pah['basedir'] . "/nimble_uploads/$id", 0777);
+                        chmod($nimble_dir_pah['basedir'] . "/nimble_uploads/$id", 0777);
+                    }
+                    
+                    // perform copy
+                    $newfile = $nimble_dir_pah['basedir'] . "/nimble_uploads/$id/" . $uploaded_file_info['basename'];
+                    copy($filepath, $newfile);
+                  
                 }
+                
             }
         }
 //file uploads code ends here
