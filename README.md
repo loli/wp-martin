@@ -68,6 +68,17 @@ You are still required to add the name of your upload to the **File Attachments*
 [your-file]
 ```
 
+## contribution 3
+
+### task
+The *save-contact-form-7* plugin contains a bug that prohibits the upload of more than one file for a single form.
+
+### solution
+Wrote a patch for *save-contact-form-7*. The patched version 2.0.1 (base don version 2.0.0) can be found in this repository.
+
+### usage
+Simply replace the folder `[wordpress]/wp-content/plugins/save-contact-form-7/` with the folder of the same name from this repository. After the switch, the information about the *save-contact-form-7* in the admin/plugins panel should read *Version 2.0.1*.
+
 ## local server configuration
 **location** : http://localhost/wp-martin/
 
