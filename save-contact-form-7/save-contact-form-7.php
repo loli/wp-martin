@@ -3,10 +3,10 @@
 
   Plugin name: Save Contact Form 7
   Plugin URI: http://nimblechapps.com
-  Description: A simple plugin to save contact form data to db.
+  Description: A simple plugin to save contact form data to db. Pathced to allow more than one file to be uploaded, although still wrongly displayed.
   Author: Nimblechapps, Oskar Maier <oskar.maier@gmail.com>
   Author URI: http://nimblechapps.com
-  Version: 2.1
+  Version: 2.0.1
  */
 //function to check dependencies for Contact Form 7 Plugin
 
